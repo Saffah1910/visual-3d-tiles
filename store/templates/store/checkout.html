@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Checkout</title>
+</head>
+<body>
+
+<a href="{% url 'view_cart' %}">← Back to Cart</a>
+
+<h1>Checkout</h1>
+
+<h3>Your Order</h3>
+
+<ul>
+{% for item in items %}
+    <li>
+        {{ item.product.name }} —
+        {{ item.quantity }} x R{{ item.product.price }}
+        = R{{ item.subtotal }}
+    </li>
+{% endfor %}
+</ul>
+
+<h3>Total: R {{ total }}</h3>
+
+<hr>
+
+<form method="post">
+    {% csrf_token %}
+
+    <p>
+        <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            required
+        >
+    </p>
+
+    <p>
+        <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            required
+        >
+    </p>
+
+    <p>
+        <textarea
+            name="address"
+            placeholder="Delivery Address"
+            required
+        ></textarea>
+    </p>
+
+    <button type="submit">
+        Continue to Payment
+    </button>
+</form>
+
+</body>
+</html>

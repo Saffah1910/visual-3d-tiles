@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pay Now</title>
+</head>
+<body>
+
+<h1>Complete Your Payment</h1>
+
+<p>Redirecting you to PayFast...</p>
+
+<form
+    action="https://sandbox.payfast.co.za/eng/process"
+    method="post"
+    id="payfast-form"
+>
+
+    {% for key, value in data.items %}
+        <input type="hidden" name="{{ key }}" value="{{ value }}">
+    {% endfor %}
+
+    <button type="submit">
+        Pay Now (Test Mode)
+    </button>
+
+</form>
+
+</body>
+</html>

@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product
 from .models import Order, OrderItem
-from urllib.parse import urlencode
+# from urllib.parse import urlencode
+from urllib.parse import quote_plus
 import hashlib
-
-
+from urllib.parse import urlencode
 
 
 def product_list(request):
@@ -122,59 +122,40 @@ def checkout(request):
         'total': total
     })
 
+
+
 def generate_signature(data, passphrase=""):
-    output = ""
-
-    for key in sorted(data.keys()):
-        value = data[key]
-        if value != "":
-            output += f"{key}={value}&"
-
-    output = output[:-1]  # remove last &
+    encoded = urlencode(data)
 
     if passphrase:
-        output += f"&passphrase={passphrase}"
+        encoded += f"&passphrase={passphrase}"
 
-    return hashlib.md5(output.encode()).hexdigest()
+    return hashlib.md5(encoded.encode()).hexdigest()
+
 
 
 def payment(request, order_id):
     order = Order.objects.get(id=order_id)
 
-    # PAYFAST SANDBOX DETAILS
-    merchant_id = "10000100"
-    merchant_key = "46f0cd694581a"
-    passphrase = ""  # sandbox = empty
-
-    return_url = request.build_absolute_uri('/')
-    cancel_url = request.build_absolute_uri('/cart/')
-    notify_url = request.build_absolute_uri('/payfast/notify/')
-
     data = {
-        # Merchant
-        "merchant_id": merchant_id,
-        "merchant_key": merchant_key,
-
-        # URLs
-        "return_url": return_url,
-        "cancel_url": cancel_url,
-        "notify_url": notify_url,
-
-        # Buyer
-        "name_first": order.full_name,
-        "email_address": order.email if order.email else "test@example.com",
-
-
-        # Transaction
+        "merchant_id": "10000100",
+        "merchant_key": "46f0cd694581a",
+        "return_url": "http://127.0.0.1:8000/",
+        "cancel_url": "http://127.0.0.1:8000/cart/",
+        "notify_url": "http://127.0.0.1:8000/payfast/notify/",
+        "name_first": order.full_name.strip(),
+        "email_address": order.email.strip(),
         "m_payment_id": str(order.id),
-        "amount": "%.2f" % order.total,
+        "amount": f"{order.total:.2f}",
         "item_name": f"Order {order.id}",
     }
 
-    # Generate correct signature
-    signature = generate_signature(data, passphrase)
-    data["signature"] = signature
+    # remove empty values
+    data = {k: v for k, v in data.items() if v}
+
+    data["signature"] = generate_signature(data)
 
     return render(request, "store/payment.html", {
+        "payfast_url": "https://sandbox.payfast.co.za/eng/process",
         "data": data
     })

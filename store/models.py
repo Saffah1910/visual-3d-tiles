@@ -3,6 +3,13 @@ from django.db import models
 # Create your models here
 
 class Product(models.Model):
+
+    CATEGORY_CHOICES = [
+        ('wall', 'Wall Tiles'),
+        ('floor', 'Floor Tiles'),
+        ('outdoor', 'Outdoor Tiles'),
+    ]
+
     name = models.CharField(max_length=200)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     material = models.CharField(max_length=100)
@@ -10,6 +17,12 @@ class Product(models.Model):
     colors = models.CharField(max_length=200)
     description = models.TextField()
     image = models.ImageField(upload_to='products/')
+
+    category = models.CharField(
+        max_length=20,
+        choices=CATEGORY_CHOICES,
+        default='floor'
+    )
 
     def __str__(self):
         return self.name

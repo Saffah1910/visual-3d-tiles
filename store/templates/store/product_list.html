@@ -9,12 +9,69 @@
             src: url("./fonts/Blanco-vnerO.ttf") format("truetype");
         }
 
-        body {
-            font-family: "Blanco", sans-serif;
+        /* Navbar */
+        .navbar {
+            background-color: black;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        .navbar .logo {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 25px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar ul li a {
+            text-decoration: none;
+            color: white;
+            font-size: 16px;
+            position: relative;
+        }
+
+        .navbar ul li a::after {
+            content: "";
+            position: absolute;
+            width: 0%;
+            height: 2px;
+            background: white;
+            left: 0;
+            bottom: -5px;
+            transition: width 0.3s;
+        }
+
+        .navbar ul li a:hover::after {
+            width: 100%;
+        }
+
+        .whatsapp {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #25D366;
+            color: white;
+            font-size: 28px;
+            padding: 15px;
+            border-radius: 50%;
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
 
         body {
-            font-family: Arial;
+            font-family: "Blanco", sans-serif;
             background: #f5f5f5;
             margin: 0;
             padding: 0;
@@ -24,6 +81,41 @@
             text-align: center;
         }
 
+        /* Hero text */
+        .hero-text {
+            position: absolute;
+            z-index: 2;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+        }
+
+        .hero-text h1 {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+
+        .hero-text p {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .hero-btn {
+            padding: 12px 25px;
+            background: white;
+            color: black;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .hero-btn:hover {
+            background: #ddd;
+        }
+
+        /* Products Grid */
         .products {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -36,12 +128,23 @@
             padding: 15px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .product:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
         .product img {
             width: 100%;
             height: 200px;
             object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .product:hover img {
+            transform: scale(1.08);
         }
 
         .price {
@@ -62,12 +165,11 @@
             box-sizing: border-box
         }
 
-        /* Fullscreen slideshow */
+        /* Slideshow */
         .slideshow-container {
             position: relative;
             width: 100%;
             height: 100vh;
-            /* Full screen height */
             overflow: hidden;
             margin: 0;
         }
@@ -83,205 +185,250 @@
             pointer-events: none;
         }
 
-        /* Each slide fills the screen */
-        .mySlides {
-            display: none;
-            width: 100%;
-            height: 100vh;
+        /* Filters: Desktop buttons & Mobile dropdown */
+        /* Desktop buttons container */
+        .buttons-filter {
+            display: flex;
+            justify-content: center;
+            /* center buttons */
+            flex-wrap: wrap;
+            /* allow wrapping if needed */
+            gap: 10px;
+            /* space between buttons */
+            margin: 30px 10px;
+            /* small horizontal margins */
         }
 
-        /* Make images cover entire screen */
-        .mySlides img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            /* Prevent stretching */
-        }
-
-        /* Next & previous buttons */
-        .prev,
-        .next {
-            cursor: pointer;
-            position: absolute;
-            z-index: 2;
-            top: 50%;
-            width: auto;
-            margin-top: -22px;
-            padding: 16px;
+        /* Each button */
+        .buttons-filter button {
+            flex: 1 1 auto;
+            /* grow/shrink automatically */
+            max-width: 180px;
+            /* prevent too wide buttons */
+            min-width: 100px;
+            /* optional, keep them readable */
+            padding: 10px 20px;
+            border-radius: 25px;
+            border: none;
+            background: black;
             color: white;
-            font-weight: bold;
-            font-size: 18px;
-            transition: 0.6s ease;
-            border-radius: 0 3px 3px 0;
-            user-select: none;
-        }
-
-        /* Position the "next button" to the right */
-        .next {
-            right: 0;
-            border-radius: 3px 0 0 3px;
-        }
-
-        /* On hover, add a black background color with a little bit see-through */
-        .prev:hover,
-        .next:hover {
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-
-        /* Caption text */
-        .text {
-            color: #f2f2f2;
-            font-size: 15px;
-            padding: 8px 12px;
-            position: absolute;
-            bottom: 8px;
-            width: 100%;
-            text-align: center;
-        }
-
-        /* Number text (1/3 etc) */
-        .numbertext {
-            color: #f2f2f2;
-            font-size: 12px;
-            padding: 8px 12px;
-            position: absolute;
-            top: 0;
-        }
-
-        /* The dots/bullets/indicators */
-        .dot {
             cursor: pointer;
-            height: 15px;
-            width: 15px;
-            margin: 0 2px;
-            background-color: #bbb;
-            border-radius: 50%;
-            display: inline-block;
-            transition: background-color 0.6s ease;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            /* prevent text from wrapping inside button */
         }
 
-        .active,
-        .dot:hover {
-            background-color: #717171;
+        .buttons-filter button:hover {
+            background: #444;
+            transform: scale(1.05);
         }
 
-        /* Fading animation */
-        .fade {
-            animation-name: fade;
-            animation-duration: 1.5s;
+        .buttons-filter button.active {
+            background: #fff;
+            color: black;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
 
-        @keyframes fade {
-            from {
-                opacity: .4
+        .dropdown-filter {
+            text-align: center;
+            margin: 30px 0;
+            display: none;
+            /* hidden on desktop */
+        }
+
+        .dropdown-filter select {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 25px;
+            border: 1px solid #333;
+            cursor: pointer;
+            background: black;
+            color: white;
+            outline: none;
+            appearance: none;
+            transition: background 0.3s;
+        }
+
+        .dropdown-filter select:hover {
+            background: #444;
+        }
+
+        @media (max-width: 768px) {
+            .buttons-filter {
+                display: none;
             }
 
-            to {
-                opacity: 1
+            .dropdown-filter {
+                display: block;
             }
+        }
+
+        /* Footer */
+        .footer {
+            background: black;
+            color: white;
+            padding: 40px 20px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #ccc;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
         }
     </style>
-
 </head>
 
 <body>
-    <!-- Slideshow container -->
+    <a href="https://wa.me/27000000000" class="whatsapp">💬</a>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">Visual 3D Tiles</div>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="#products">Products</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="{% url 'view_cart' %}">🛒 Cart</a></li>
+        </ul>
+    </div>
+
+    <!-- Slideshow -->
     <div class="slideshow-container" style="background-color: black;">
         <div class="overlay"></div>
-
-        <!-- Full-width images with number and caption text -->
-        <div class="mySlides fade">
-            <!-- <div class="numbertext">3 / 3</div> -->
-            <img src="/media/landing_page/IMG-20260215-WA0004.jpg">
-            <!-- <div class="text">Caption Three</div> -->
+        <div class="hero-text">
+            <h1>Premium Tiles for Modern Spaces</h1>
+            <p>Transform your home with Visual 3D Tiles</p>
+            <a href="#products"><button class="hero-btn">Shop Now</button></a>
         </div>
-
-        <div class="mySlides fade">
-            <!-- <div class="numbertext">3 / 3</div> -->
-            <img src="/media/landing_page/IMG-20260215-WA0022.jpg">
-            <!-- <div class="text">Caption Three</div> -->
-        </div>
-
-        <div class="mySlides fade">
-            <!-- <div class="numbertext">3 / 3</div> -->
-            <img src="/media/landing_page/IMG-20260215-WA0034.jpg">
-            <!-- <div class="text">Caption Three</div> -->
-        </div>
-        <div class="mySlides fade">
-            <!-- <div class="numbertext">3 / 3</div> -->
-            <img src="/media/landing_page/IMG-20260215-WA0044.jpg">
-            <!-- <div class="text">Caption Three</div> -->
-        </div>
-        <div class="mySlides fade">
-            <!-- <div class="numbertext">3 / 3</div> -->
-            <img src="/media/landing_page/IMG-20260215-WA0046.jpg">
-            <!-- <div class="text">Caption Three</div> -->
-        </div>
-
-        <!-- Next and previous buttons
-        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-        <a class="next" onclick="plusSlides(1)">&#10095;</a> -->
-    </div>
-    <br>
-
-    <!-- The dots/circles -->
-    <!-- <div style="text-align:center">
-        <span class="dot" onclick="currentSlide(1)"></span>
-        <span class="dot" onclick="currentSlide(2)"></span>
-        <span class="dot" onclick="currentSlide(3)"></span>
-    </div> -->
-    <div style="display:flex; justify-content:space-between; padding:20px;">
-        <h1>Visual 3D Tiles</h1>
-
-        <a href="{% url 'view_cart' %}">
-            🛒 View Cart
-        </a>
-
-
+        <div class="mySlides fade"><img src="/media/landing_page/IMG-20260215-WA0004.jpg"></div>
+        <div class="mySlides fade"><img src="/media/landing_page/IMG-20260215-WA0022.jpg"></div>
+        <div class="mySlides fade"><img src="/media/landing_page/IMG-20260215-WA0034.jpg"></div>
+        <div class="mySlides fade"><img src="/media/landing_page/IMG-20260215-WA0044.jpg"></div>
+        <div class="mySlides fade"><img src="/media/landing_page/IMG-20260215-WA0046.jpg"></div>
     </div>
 
+    <!-- Filters -->
+    <div class="filters buttons-filter">
+        <button onclick="filterProducts('all')">All</button>
+        <button onclick="filterProducts('wall')">Wall Tiles</button>
+        <button onclick="filterProducts('floor')">Floor Tiles</button>
+        <button onclick="filterProducts('outdoor')">Outdoor</button>
+    </div>
 
-    <div class="products">
+    <div class="filters dropdown-filter">
+        <select id="categoryFilter" onchange="filterProductsDropdown()">
+            <option value="all">All</option>
+            <option value="wall">Wall Tiles</option>
+            <option value="floor">Floor Tiles</option>
+            <option value="outdoor">Outdoor</option>
+        </select>
+    </div>
 
+    <!-- Products -->
+    <div class="products" id="products">
         {% for product in products %}
-        <div class="product">
-
+        <div class="product {{ product.category }}">
             <img src="{{ product.image.url }}">
-
             <h3>{{ product.name }}</h3>
-
             <p>{{ product.material }}</p>
             <p>{{ product.dimensions }}</p>
             <p>{{ product.colors }}</p>
-
             <p class="price">R {{ product.price }}</p>
-
-            <a href="{% url 'add_to_cart' product.id %}">
-                <button>Add to Cart</button>
-            </a>
-
-
+            <a href="{% url 'add_to_cart' product.id %}"><button>Add to Cart</button></a>
         </div>
         {% endfor %}
-
     </div>
 
-</body>
-<script>
-    let slideIndex = 0;
-    showSlides();
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div>
+                <h3>Visual 3D Tiles</h3>
+                <p>High quality tiles for homes and businesses.</p>
+            </div>
+            <div>
+                <h4>Quick Links</h4>
+                <p><a href="/">Home</a></p>
+                <p><a href="#products">Products</a></p>
+                <p><a href="#">Contact</a></p>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <p>Email: info@visual3dtiles.com</p>
+                <p>Phone: +27 00 000 0000</p>
+            </div>
+        </div>
+        <p class="copyright">© 2026 Visual 3D Tiles. All rights reserved.</p>
+    </footer>
 
-    function showSlides() {
-        let i;
-        let slides = document.getElementsByClassName("mySlides");
-        for (i = 0; i < slides.length; i++) {
-            slides[i].style.display = "none";
+    <!-- Scripts -->
+    <script>
+        // Slideshow
+        let slideIndex = 0;
+        showSlides();
+        function showSlides() {
+            let i;
+            let slides = document.getElementsByClassName("mySlides");
+            for (i = 0; i < slides.length; i++) { slides[i].style.display = "none"; }
+            slideIndex++;
+            if (slideIndex > slides.length) { slideIndex = 1 }
+            slides[slideIndex - 1].style.display = "block";
+            setTimeout(showSlides, 5000);
         }
-        slideIndex++;
-        if (slideIndex > slides.length) { slideIndex = 1 }
-        slides[slideIndex - 1].style.display = "block";
-        setTimeout(showSlides, 5000); // Change image every 5 seconds
-    }
-</script>
+
+        // Product filtering
+        function filterProducts(category) {
+            const products = document.getElementsByClassName('product');
+            for (let i = 0; i < products.length; i++) {
+                if (category === 'all' || products[i].classList.contains(category)) {
+                    products[i].style.display = 'block';
+                } else {
+                    products[i].style.display = 'none';
+                }
+            }
+
+            // Highlight active button (desktop)
+            const buttons = document.querySelectorAll('.buttons-filter button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            buttons.forEach(btn => {
+                if (btn.textContent.toLowerCase().includes(category)) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        function filterProductsDropdown() {
+            const select = document.getElementById('categoryFilter');
+            filterProducts(select.value);
+        }
+
+        // Add click listeners to buttons
+        const filterButtons = document.querySelectorAll('.buttons-filter button');
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterProducts(btn.textContent.toLowerCase());
+            });
+        });
+    </script>
+</body>
 
 </html>

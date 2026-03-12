@@ -13,6 +13,13 @@ def product_list(request):
         'products': products
     })
 
+def product_detail(request, id):
+    product = get_object_or_404(Product, id=id)
+
+    return render(request, 'store/product_detail.html', {
+        'product': product
+    })
+
 
 def add_to_cart(request, product_id):
     cart = request.session.get('cart', {})

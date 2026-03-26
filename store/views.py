@@ -79,55 +79,107 @@ def update_cart(request, product_id):
     return redirect('view_cart')
 
 
+# def checkout(request):
+#     cart = request.session.get('cart', {})
+
+#     if not cart:
+#         return redirect('product_list')
+
+#     items = []
+#     total = 0
+
+#     for product_id, quantity in cart.items():
+#         product = Product.objects.get(id=product_id)
+#         subtotal = product.price * quantity
+#         total += subtotal
+
+#         items.append({
+#             'product': product,
+#             'quantity': quantity,
+#             'subtotal': subtotal
+#         })
+
+#     if request.method == 'POST':
+#         name = request.POST['name']
+#         email = request.POST['email']
+#         address = request.POST['address']
+
+#         order = Order.objects.create(
+#             full_name=name,
+#             email=email,
+#             address=address,
+#             total=total
+#         )
+
+#         for item in items:
+#             OrderItem.objects.create(
+#                 order=order,
+#                 product=item['product'],
+#                 price=item['product'].price,
+#                 quantity=item['quantity']
+#             )
+
+#         request.session['cart'] = {}
+
+#         return redirect('payment', order_id=order.id)
+
+
+#     return render(request, 'store/checkout.html', {
+#         'items': items,
+#         'total': total
+#     })
+
+
+
 def checkout(request):
     cart = request.session.get('cart', {})
 
-    if not cart:
-        return redirect('product_list')
+    products = Product.objects.filter(id__in=cart.keys())
 
-    items = []
     total = 0
+    cart_items = []
 
-    for product_id, quantity in cart.items():
-        product = Product.objects.get(id=product_id)
-        subtotal = product.price * quantity
-        total += subtotal
+    for product in products:
+        quantity = cart[str(product.id)]
+        total += product.price * quantity
 
-        items.append({
+        cart_items.append({
             'product': product,
             'quantity': quantity,
-            'subtotal': subtotal
+            'subtotal': product.price * quantity
         })
 
-    if request.method == 'POST':
-        name = request.POST['name']
-        email = request.POST['email']
-        address = request.POST['address']
+    if request.method == "POST":
+        name = request.POST.get('name')
+        phone = request.POST.get('phone')
+        address = request.POST.get('address')
 
         order = Order.objects.create(
-            full_name=name,
-            email=email,
+            customer_name=name,
+            phone=phone,
             address=address,
-            total=total
+            total_price=total
         )
 
-        for item in items:
+        for item in cart_items:
             OrderItem.objects.create(
                 order=order,
                 product=item['product'],
-                price=item['product'].price,
-                quantity=item['quantity']
+                quantity=item['quantity'],
+                price=item['product'].price
             )
 
+        # clear cart
         request.session['cart'] = {}
 
-        return redirect('payment', order_id=order.id)
-
+        return redirect('order_success', order_id=order.id)
 
     return render(request, 'store/checkout.html', {
-        'items': items,
+        'cart_items': cart_items,
         'total': total
     })
+
+
 
 
 
@@ -166,3 +218,51 @@ def payment(request, order_id):
         "payfast_url": "https://sandbox.payfast.co.za/eng/process",
         "data": data
     })
+
+def place_order(request):
+    if request.method == "POST":
+        full_name = request.POST.get('full_name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        address = request.POST.get('address')
+
+        cart = request.session.get('cart', {})
+        total = 0
+
+        # Create order first
+        order = Order.objects.create(
+            customer_name=full_name,
+            email=email,
+            phone=phone,
+            address=address,
+            total_price=0
+        )
+
+        # Save cart items
+        
+
+        for product_id, quantity in cart.items():
+            product = Product.objects.get(id=product_id)
+            price = product.price
+
+            total += price * quantity
+
+            OrderItem.objects.create(
+                order=order,
+                product_name=product.name,
+                price=price,
+                quantity=quantity
+            )
+
+        # Update total
+        order.total_price = total
+        order.save()
+
+        # ✅ Clear cart
+        request.session['cart'] = {}
+
+        return redirect('order_success', order_id=order.id)
+    
+def order_success(request, order_id):
+    order = Order.objects.get(id=order_id)
+    return render(request, 'store/order_success.html', {'order': order})

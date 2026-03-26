@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Success</title>
+</head>
+<body>
+
+<h1>✅ Order Placed Successfully!</h1>
+
+<p>Thank you {{ order.customer_name }}</p>
+<p>Total: R{{ order.total_price }}</p>
+
+<h3>Pay via Bank Transfer</h3>
+<p>Bank: Your Bank</p>
+<p>Account Name: Tile Store</p>
+<p>Account Number: 12345678</p>
+
+<br>
+
+<a href="https://wa.me/27XXXXXXXXXX?text=Hi I placed an order (ID: {{ order.id }}) for R{{ order.total_price }}">
+    📲 Confirm via WhatsApp
+</a>
+
+<br><br>
+
+<a href="/">Back to Store</a>
+
+</body>
+</html>

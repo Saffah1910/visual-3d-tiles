@@ -1,67 +1,86 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Your Cart</title>
 </head>
+
 <body>
 
-<a href="/">← Continue Shopping</a>
+    <a href="/">← Continue Shopping</a>
 
-<h1>Your Cart</h1>
+    <h1>Your Cart</h1>
 
-{% if items %}
+    {% if items %}
 
-<table border="1" cellpadding="10">
-    <tr>
-        <th>Product</th>
-        <th>Price</th>
-        <th>Qty</th>
-        <th>Subtotal</th>
-        <th>Action</th>
-    </tr>
+    <table border="1" cellpadding="10">
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Subtotal</th>
+            <th>Action</th>
+        </tr>
+   
+        {% for item in items %}
+        <tr class="cart-item">
+            <td class="item-name">{{ item.product.name }}</td>
 
-    {% for item in items %}
-    <tr>
-        <td>{{ item.product.name }}</td>
-        <td>R {{ item.product.price }}</td>
+            <td class="item-price">{{ item.product.price }}</td>
 
-        <td>
-            <form action="{% url 'update_cart' item.product.id %}" method="post">
-                {% csrf_token %}
-                <input
-                    type="number"
-                    name="quantity"
-                    value="{{ item.quantity }}"
-                    min="1"
-                    style="width:50px;"
-                >
-                <button type="submit">Update</button>
-            </form>
-        </td>
+            <td class="item-qty">{{ item.quantity }}</td>
 
-        <td>R {{ item.subtotal }}</td>
+            <td>R {{ item.subtotal }}</td>
 
-        <td>
-            <a href="{% url 'remove_from_cart' item.product.id %}">
-                Remove
-            </a>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
+            <td>
+                <a href="{% url 'remove_from_cart' item.product.id %}">
+                    Remove
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
 
-<h3>Total: R {{ total }}</h3>
+    <h3>Total: R {{ total }}</h3>
 
-<a href="{% url 'checkout' %}">
-    <button>Proceed to Checkout</button>
-</a>
 
-{% else %}
+    <button onclick="sendToWhatsApp()">Checkout via WhatsApp</button>
 
-<p>Your cart is empty.</p>
-<a href="/">Shop Now</a>
+    {% else %}
 
-{% endif %}
+    <p>Your cart is empty.</p>
+    <a href="/">Shop Now</a>
+
+    {% endif %}
+
+
+    <script>
+        function sendToWhatsApp() {
+            let message = "🧾 New Order - Visual 3D Tiles\n\n";
+
+            let items = document.querySelectorAll(".cart-item");
+
+            items.forEach(item => {
+                let name = item.querySelector(".item-name").innerText;
+                let price = item.querySelector(".item-price").innerText;
+                let qty = item.querySelector(".item-qty").innerText;
+
+                message += `- ${name} (x${qty}) - R${price}\n`;
+            });
+
+            let total = "{{ total }}";
+
+            message += `\nTotal: R${total}\n\n`;
+            message += "Please send EFT details.";
+
+            let phone = "27831234567";
+            let url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(message);
+
+            window.open(url, "_blank");
+        }
+    </script>
+
 
 </body>
+
 </html>
